@@ -1,4 +1,4 @@
-# StreetWise server-side code
+# StreetWise server
 The server side of StreetWise is implemented in PHP, and uses a simple file-based method for storage and retrieval of questions and answers.
 
 ## Setup
