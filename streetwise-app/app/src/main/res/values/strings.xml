@@ -1,0 +1,37 @@
+<resources>
+	<string name="app_name" translatable="false">StreetWise Answers</string>
+
+	<string name="audio_permission_message">This app needs to record audio to save your answers</string>
+	<string name="external_storage_permission_message">This app needs to write external storage to record audio</string>
+	<string name="background_download">Auto download</string>
+	<string name="refresh_questions">Refresh questions</string>
+	<string name="refresh">Refresh</string>
+	<string name="record">Recording…</string>
+	<string name="play_answer">Play</string>
+	<string name="stop">Stop</string>
+	<string name="save">Save</string>
+	<string name="play">Play question</string>
+	<string name="answer">Answer</string>
+	<string name="cancel">Cancel</string>
+	<string name="submit">Send</string>
+	<string name="saving">Saving</string>
+	<string name="dismiss">Dismiss</string>
+	<string name="retry">Retry</string>
+	<string name="log_in">Log in</string>
+	<string name="hint_log_in">Enter your number</string>
+	<string name="hint_password">Enter the password</string>
+	<string name="loading_questions">Loading latest questions…</string>
+	<string name="questions_available">New questions available – tap to refresh</string>
+	<string name="complete_answer_warning_loading">Please complete the current answer before loading new questions</string>
+	<string name="complete_answer_warning_playback">Please complete the current answer recording before playing a question</string>
+	<string name="complete_answer_warning_recording">Please complete the current answer recording before starting another</string>
+	<string name="question_download_error">Unable to download available questions - please try again</string>
+	<string name="all_questions_answered">All available questions have now been answered. Please try again later</string>
+	<string name="answer_playback_failed">Unable to play the answer file - please try again</string>
+	<string name="question_playback_failed">Unable to play the question file - please try again</string>
+	<string name="reserving_question">Reserving question…</string>
+	<string name="reserving_conflict">Sorry, this question is already reserved - please try a different question</string>
+	<string name="reserving_failed">Error: unable to reserve this question - please try again</string>
+	<string name="save_answer_succeeded">Answer to question %1$d successfully saved</string>
+	<string name="save_answer_failed">Error: unable to save your answer file - please try again</string>
+</resources>

@@ -1,9 +1,17 @@
 # StreetWise
-StreetWise is a local community-sourced audio question and answer system.
+StreetWise is a community-sourced audio question and answer system.
 
-The system's hardware designs, server platform and accompanying Android app source code will be made available later in 2018 when existing deployments and refinements are completed.
+The system's hardware designs, speech appliance code, server platform and Android app are all released under the Apache 2.0 license.
 
-Until then, see the [toolkit website](http://digitalinclusiontoolkit.org/) and [research project website](http://www.reshapingthefuture.org/) for more details and related work.
+See the [toolkit website](http://digitalinclusiontoolkit.org/) and [research project website](http://www.reshapingthefuture.org/) for more details and related work.
 
-### License
+## Setting up StreetWise
+StreetWise is made up of four separate components, and each one is documented in more detail within the relevant source directory:
+
+* [Speech appliance hardware](streetwise-hardware)
+* [Speech appliance code](streetwise-appliance)
+* [Server-side code](streetwise-server)
+* [Answer app code](streetwise-app)
+
+## License
 Apache 2.0

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/layout_root"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:keepScreenOn="true">
+
+	<RelativeLayout
+		android:id="@+id/button_row"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
+		<ToggleButton
+			android:id="@+id/toggle_background"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:textOff="@string/background_download"
+			android:textOn="@string/background_download"
+			android:visibility="gone" />
+
+		<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+			<!-- frame layout is just a fix to have progress bar above button -->
+			<Button
+				android:id="@+id/refresh_button"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:minHeight="54dp"
+				android:text="@string/refresh_questions" />
+		</FrameLayout>
+
+		<ProgressBar
+			android:id="@+id/loading_progress"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:layout_marginEnd="2dp"
+			android:indeterminate="true" />
+	</RelativeLayout>
+
+	<ac.robinson.streetwise.StoppableListView
+		android:id="@+id/question_list"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/button_row" />
+
+	<RelativeLayout
+		android:id="@+id/login_frame"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@android:color/white">
+
+		<EditText
+			android:id="@+id/source"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_above="@id/login"
+			android:layout_centerHorizontal="true"
+			android:gravity="center_horizontal"
+			android:hint="@string/hint_log_in"
+			android:imeOptions="actionNext"
+			android:inputType="numberDecimal"
+			android:minWidth="128dp"
+			android:textSize="24sp" />
+
+		<EditText
+			android:id="@+id/login"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:gravity="center_horizontal"
+			android:hint="@string/hint_password"
+			android:imeOptions="actionGo"
+			android:inputType="textPassword"
+			android:minWidth="128dp"
+			android:textSize="24sp" />
+
+		<TextView
+			android:id="@+id/login_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_above="@id/source"
+			android:layout_centerHorizontal="true"
+			android:clickable="true"
+			android:focusable="true"
+			android:onClick="handleLogin"
+			android:text="@string/log_in"
+			android:textSize="32sp" />
+	</RelativeLayout>
+</RelativeLayout>

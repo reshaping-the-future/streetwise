@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- The URL (including path where necessary) of the StreetWise server. This should include the trailing slash. -->
+	<string name="server_url" translatable="false">*** YOUR SERVER URL HERE ***</string>
+
+	<!-- The API key ($ANSWER_APP_KEY) that you chose in your StreetWise server configuration. -->
+	<string name="server_key" translatable="false">*** YOUR ANSWER APP API KEY HERE ***</string>
+
+	<!-- We recommend that you distribute this app internally, or through Google Play's private channels. If you decide
+	to release your app publicly then the password function will provide a small amount of protection, but please note
+	that it is very easy to extract static passwords or keys from publicly-distributed apps. You should not rely on this
+	password as a strong access control mechanism. -->
+	<string name="app_password" translatable="false">streetwise</string>
+</resources>

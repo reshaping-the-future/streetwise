@@ -1,0 +1,30 @@
+apply plugin: 'com.android.application'
+
+android {
+	compileSdkVersion 28
+	defaultConfig {
+		applicationId 'ac.robinson.streetwise'
+		minSdkVersion 18
+		targetSdkVersion 28
+		versionCode 1
+		versionName '1'
+		resConfigs 'en'
+	}
+	buildTypes {
+		release {
+			minifyEnabled true
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
+}
+
+dependencies {
+	implementation 'com.android.support:appcompat-v7:28.0.0'
+	implementation 'com.android.support:design:28.0.0'
+	implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+	implementation 'com.google.firebase:firebase-messaging:17.6.0'
+}
+
+if (project.file('google-services.json').exists()) {
+	apply plugin: 'com.google.gms.google-services'
+}

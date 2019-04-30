@@ -1,0 +1,7 @@
+out/
+**/.idea/workspace.xml
+*.iml
+**/.gradle/
+**/build/
+**/.idea/libraries
+**/.idea/codeStyles

@@ -1,0 +1,62 @@
+buildscript {
+    ext.kotlin_version = '1.2.41'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+plugins {
+    id 'java'
+}
+
+group 'pss2'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://oss.sonatype.org/content/groups/public'
+    }
+}
+
+dependencies {
+    // Kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    // Using snapshot build. See: https://github.com/Pi4J/pi4j/issues/349
+    implementation 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+    implementation 'com.pi4j:pi4j-device:1.2-SNAPSHOT'
+
+    // RxJava2 + RxKotlin
+    compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.1.1'
+    compile 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+
+    // JSON
+    compile group: 'org.json', name: 'json', version: '20180130'
+
+    // OkHttp
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.10.0'
+
+    // DSP
+    compile 'com.github.axet:TarsosDSP:2.4-1'
+
+    // MP3
+    compile group: 'de.sciss', name: 'jump3r', version: '1.0.4'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
