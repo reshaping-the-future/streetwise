@@ -1,4 +1,4 @@
-# StreetWise
+# StreetWise appliance hardware
 The hardware for the StreetWise appliance is designed to be simple and robust, and easily modifiable in order to allow multiple refinments and differing versions to be deployed. The version described here is based on a [Raspberry Pi 3B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/), and uses components from an [AIY Voice Kit V1](https://aiyprojects.withgoogle.com/voice-v1/) for its microphone, speaker and button. Use of the Voice Kit is optional, but it does provide a straightforward solution for high-quality sound input and output on the Raspberry Pi.
 
 Full kit list:
