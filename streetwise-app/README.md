@@ -1,6 +1,8 @@
 # StreetWise answer app
 The StreetWise answer app allows you to remotely view and answer questions.
 
+![Loading available questions](https://lh3.googleusercontent.com/y0s1PnAa2PmoV3mevhQDANFGxBdr6OMtFRRfwJZs6tBgwp4fc871gzBI8Var29ZvNSU=s511 "Setting up Better Together connections") ![Answering a question](https://lh3.googleusercontent.com/FA-OdrePgGeSjR5ngJzWDJN7xB2NTOHacVtE09K94glzsquSdhxdmbnGevCqL2WyYOGB=s511 "Better Together video plugin") ![Question answering complete](https://lh3.googleusercontent.com/npFyEjC9fjJTMFZ7HcWaKZW69mMXQCujgkZDZ-ku-27lpKiCLWFRXOvhwjDemgU540E=s511 "Better Together shopping plugin")
+
 ## Setup
 The only essential configuration step for the StreetWise answer app is to configure the server URL and API key in order to allow the app to discover available questions. Edit `server_url` and `server_key` in [configuration.xml](app/src/main/res/values/configuration.xml) to set this up.
 
