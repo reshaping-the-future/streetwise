@@ -22,18 +22,15 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven {
-        url 'https://oss.sonatype.org/content/groups/public'
-    }
 }
 
 dependencies {
     // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-    // Using snapshot build. See: https://github.com/Pi4J/pi4j/issues/349
-    implementation 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
-    implementation 'com.pi4j:pi4j-device:1.2-SNAPSHOT'
+    // Pi4J
+    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation 'com.pi4j:pi4j-device:1.2'
 
     // RxJava2 + RxKotlin
     compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.1.1'

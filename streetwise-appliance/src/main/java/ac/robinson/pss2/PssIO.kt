@@ -30,8 +30,7 @@ class PssIO : Oscilloscope.OscilloscopeEventHandler {
     private var currentPos = -1
     private var keypressPipeline: Observable<Char>? = null
     private var keypressDisposable: Disposable? = null
-    private val fn = "/dev/input/event0"
-    private val dev: EventDevice = EventDevice(fn)
+    private var dev: EventDevice? = null
     private val inputEvents: PublishSubject<InputEvent> = PublishSubject.create()
     private val audioEvents: PublishSubject<FloatArray> = PublishSubject.create()
     private var audioEventsDisposable: Disposable? = null
@@ -46,10 +45,29 @@ class PssIO : Oscilloscope.OscilloscopeEventHandler {
 
     //Call this method to initialize the keypad
     fun initialize() {
+        val eventBase = "/dev/input/event"
+        for(i in 0..30) {
+            println(i)
+            try {
+                val ed = EventDevice(eventBase +"$i")
+                val name = ed.deviceName
+                println(ed.devicePath)
+                println(ed.deviceName)
+                if(name.startsWith("MATRIX3x4",true)) {
+                    dev = ed
+                    break;
+
+                }
+            } catch (e: Exception) {
+                break
+                // Do nothing
+            }
+        }
+
         oledDisplay = Display(128, 64, GpioFactory.getInstance(),
                 SpiFactory.getInstance(SpiChannel.CS0, 8000000), RaspiPin.GPIO_08, RaspiPin.GPIO_09)
         oledDisplay?.begin()
-        dev.addListener { e -> inputEvents.onNext(e) } //Publish raw input events
+        dev?.addListener { e -> inputEvents.onNext(e) } //Publish raw input events
 
 
         keypressPipeline = inputEvents
@@ -66,7 +84,7 @@ class PssIO : Oscilloscope.OscilloscopeEventHandler {
 
     fun destroy() {
         //Stop listening for keypresses
-        dev.close()
+        dev?.close()
 
         //Dispose of the reactive pipeline
         keypressDisposable?.dispose()

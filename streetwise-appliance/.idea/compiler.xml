@@ -4,6 +4,8 @@
     <bytecodeTargetLevel>
       <module name="pss2_main" target="1.8" />
       <module name="pss2_test" target="1.8" />
+      <module name="streetwise-appliance-pss2_main" target="1.8" />
+      <module name="streetwise-appliance-pss2_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

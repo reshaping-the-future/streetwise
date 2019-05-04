@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pss2.iml" filepath="$PROJECT_DIR$/.idea/modules/pss2.iml" group="pss2" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pss2_main.iml" filepath="$PROJECT_DIR$/.idea/modules/pss2_main.iml" group="pss2" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/pss2_test.iml" filepath="$PROJECT_DIR$/.idea/modules/pss2_test.iml" group="pss2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/streetwise-appliance-pss2.iml" filepath="$PROJECT_DIR$/.idea/modules/streetwise-appliance-pss2.iml" group="pss2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/streetwise-appliance-pss2_main.iml" filepath="$PROJECT_DIR$/.idea/modules/streetwise-appliance-pss2_main.iml" group="pss2" />
     </modules>
   </component>
 </project>
