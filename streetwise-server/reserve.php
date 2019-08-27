@@ -21,10 +21,10 @@ try {
 
 	// check whether local question (and answer) exist
 	logMessage('Started question reservation (question reservation)');
-	$questionFile = preg_grep('~' . $questionId . '-.*\.mp3$~', scandir($BASE_QUESTION_DIRECTORY));
-	if ($questionFile) {
-		$answerFile = preg_grep('~' . $questionId . '-.*\.m4a$~', scandir($BASE_ANSWER_DIRECTORY));
-		if ($answerFile) {
+	$questionFile = preg_grep('/^' . $questionId . '-.*\.mp3$/', scandir($BASE_QUESTION_DIRECTORY));
+	if (count($questionFile) >= 1) {
+		$answerFile = preg_grep('/^' . $questionId . '-.*\.m4a$/', scandir($BASE_ANSWER_DIRECTORY));
+		if (count($answerFile) >= 1) {
 			throw new RuntimeException('Question has already been answered (question reservation)');
 		}
 	} else {
@@ -32,8 +32,8 @@ try {
 	}
 
 	// reserve this question - note that this is also where we clean up previous reservation files
-	$reservedFiles = preg_grep('~' . $questionId . '-\d\.reserved$~', scandir($BASE_ANSWER_DIRECTORY));
-	if (!$reservedFiles) {
+	$reservedFiles = preg_grep('/^' . $questionId . '-\d+\.reserved$/', scandir($BASE_ANSWER_DIRECTORY));
+	if (count($reservedFiles) <= 0) {
 		touch($BASE_ANSWER_DIRECTORY . $questionId . '-' . $REQUEST_SOURCE . '.reserved');
 		echo 'success';
 		logMessage('Reserved question ' . $questionId . ' for ' . $REQUEST_SOURCE . ' (question reservation)');

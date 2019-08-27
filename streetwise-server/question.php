@@ -13,7 +13,7 @@ try {
 
 	// get previously used question numbers
 	$usedNumbers = array(0, 1234); // cannot have 0000 or 1234 as an ID (1234 is the helper question; 0 is search start point, below)
-	$questionFiles = preg_grep('~\.(mp3)$~', scandir($BASE_QUESTION_DIRECTORY));
+	$questionFiles = preg_grep('/^\.(mp3)$/', scandir($BASE_QUESTION_DIRECTORY));
 	foreach($questionFiles as $file) {
 		$fileParts = explode('-', $file);
 		$usedNumbers[] = intval($fileParts[0]);

@@ -18,9 +18,9 @@ try {
 		}
 
 		logMessage('Started single response retrieval for question ' . $requestedId . ' (single response list)');
-		$questionFile = preg_grep('~' . $requestedId . '-.*\.mp3$~', scandir($BASE_QUESTION_DIRECTORY));
+		$questionFile = preg_grep('/^' . $requestedId . '-.*\.mp3$/', scandir($BASE_QUESTION_DIRECTORY));
 		if ($questionFile) {
-			$answerFile = preg_grep('~' . $requestedId . '-.*\.m4a$~', scandir($BASE_ANSWER_DIRECTORY));
+			$answerFile = preg_grep('/^' . $requestedId . '-.*\.m4a$/', scandir($BASE_ANSWER_DIRECTORY));
 			if ($answerFile) {
 				// need to loop as preg_grep returns modified original array and we don't know the original position
 				foreach ($answerFile as $item) {
@@ -45,7 +45,7 @@ try {
 
 		if (strcasecmp($_GET['type'], 'answered') === 0) {
 			logMessage('Started answered question list retrieval (response list)');
-			$answerFiles = preg_grep('~\d{4}-.*\.m4a$~', scandir($BASE_ANSWER_DIRECTORY));
+			$answerFiles = preg_grep('/^\d{4}-.*\.m4a$/', scandir($BASE_ANSWER_DIRECTORY));
 			$echoed = false;
 
 			echo '[';
@@ -62,9 +62,9 @@ try {
 
 		} else if (strcasecmp($_GET['type'], 'unanswered') === 0) {
 			logMessage('Started unanswered question list retrieval (response list)');
-			$questionFiles = preg_grep('~\d{4}-.*\.mp3$~', scandir($BASE_QUESTION_DIRECTORY));
-			$answerFiles = preg_grep('~\d{4}-.*\.m4a$~', scandir($BASE_ANSWER_DIRECTORY));
-			$reservedFiles = preg_grep('~\d{4}-\d+\.reserved$~', scandir($BASE_ANSWER_DIRECTORY));
+			$questionFiles = preg_grep('/^\d{4}-.*\.mp3$/', scandir($BASE_QUESTION_DIRECTORY));
+			$answerFiles = preg_grep('/^\d{4}-.*\.m4a$/', scandir($BASE_ANSWER_DIRECTORY));
+			$reservedFiles = preg_grep('/^\d{4}-\d+\.reserved$/', scandir($BASE_ANSWER_DIRECTORY));
 			$echoed = false;
 
 			$answeredQuestions = array();

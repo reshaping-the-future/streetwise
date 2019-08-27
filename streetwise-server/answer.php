@@ -21,7 +21,7 @@ try {
 
 	// check whether local question exists
 	logMessage('Started upload of answer to question ' . $questionId . ' (answer upload)');
-	$questionFile = preg_grep('~' . $questionId . '-.*\.mp3$~', scandir($BASE_HUMAN_QUESTION_DIRECTORY));
+	$questionFile = preg_grep('/^' . $questionId . '-.*\.mp3$/', scandir($BASE_HUMAN_QUESTION_DIRECTORY));
 	if (!$questionFile) {
 		throw new RuntimeException('Question id not found (answer upload)');
 	}
