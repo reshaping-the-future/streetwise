@@ -11,6 +11,7 @@ class SoundPlayer {
 	private final String mLanguageCode;
 
 	private Clip mCurrentClip;
+	private final Mixer mMixer;
 
 	public enum Sound {
 		start,
@@ -54,8 +55,9 @@ class SoundPlayer {
 		void onPlaybackFailed();
 	}
 
-	SoundPlayer(String languageCode) {
+	SoundPlayer(String languageCode, Mixer mixer) {
 		mLanguageCode = languageCode;
+		mMixer = mixer;
 	}
 
 	private URL getSound(Sound sound) {
@@ -112,7 +114,7 @@ class SoundPlayer {
 
 
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getSound(sound));
-			mCurrentClip = AudioSystem.getClip(); // TODO: should we preload and cache Clip objects?
+			mCurrentClip = AudioSystem.getClip(mMixer.getMixerInfo()); // TODO: should we preload and cache Clip objects?
 			mCurrentClip.addLineListener(event -> {
 				if (event.getType() == LineEvent.Type.STOP) { // must release so future playback can take place
 					mCurrentClip.close();
@@ -135,11 +137,22 @@ class SoundPlayer {
 		new Thread(() -> {
 			Pss2.logEvent("Playing answer file from: " + answerLocation);
 			try {
-				// used to use VLC here, but for some reason it silently fails to play certain files/streams
-				Process vlcProcess = Runtime.getRuntime().exec("mplayer " + answerLocation);
-				int vlcResult = vlcProcess.waitFor();
-				Pss2.logEvent("Finished playing answer file: " + answerLocation + " (VLC result: " + vlcResult + ")");
-				mp3PlaybackCompletedCallback.onPlaybackCompleted();
+				// we used to use VLC here, but for some reason it silently fails to play certain files/streams
+				// then we switched to mplayer, but it (very occasionally) hangs mid-playback
+				// so we now use mpv :-)
+				if(mMixer.getMixerInfo().getName().contains("Device")) {
+					Pss2.logEvent("Using USB Soundcard for playback");
+					Process playerProcess = Runtime.getRuntime().exec("mpv --audio-device=alsa/plughw:CARD=Device,DEV=0 --no-ytdl " + answerLocation);
+					int playerResult = playerProcess.waitFor();
+					Pss2.logEvent("Finished playing answer file: " + answerLocation + " (result: " + playerResult + ")");
+					mp3PlaybackCompletedCallback.onPlaybackCompleted();
+				} else {
+					Pss2.logEvent("Using speaker for playback (default)");
+					Process playerProcess = Runtime.getRuntime().exec("mpv --no-ytdl " + answerLocation);
+					int playerResult = playerProcess.waitFor();
+					Pss2.logEvent("Finished playing answer file: " + answerLocation + " (result: " + playerResult + ")");
+					mp3PlaybackCompletedCallback.onPlaybackCompleted();
+				}
 			} catch (IOException | InterruptedException e) {
 				Pss2.logEvent("Error: unable to play answer file: " + answerLocation);
 				e.printStackTrace();

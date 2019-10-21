@@ -70,34 +70,12 @@ class SilenceDetectingAudioRecorder implements AudioProcessor {
 		void onRecordingFailed();
 	}
 
-	SilenceDetectingAudioRecorder(File outputDirectory, PssIO io) {
+	SilenceDetectingAudioRecorder(File outputDirectory, PssIO io, Mixer mixer) {
 		mOutputDirectory = outputDirectory;
 		mIo = io;
 
-		Mixer mixer = null;
-		RuntimeException mixerError = null;
-		try {
-			Mixer.Info[] mixers = AudioSystem.getMixerInfo();
-			for (Mixer.Info mixerInfo : mixers) {
-				final Mixer currentMixer = AudioSystem.getMixer(mixerInfo);
-				if (currentMixer.getTargetLineInfo().length != 0) { // TargetLineInfo length != 0 == can record
-					mixer = currentMixer;
-					break; // just go with the first one we find
-				}
-			}
-		} catch (SecurityException | IllegalArgumentException e) {
-			mixerError = e;
-		}
-
-		if (mixer == null) {
-			Pss2.logEvent("Unable to get audio mixers");
-			if (mixerError != null) {
-				mixerError.printStackTrace();
-			}
-			return;
-		}
-
 		mMixer = mixer;
+		RuntimeException mixerError = null;
 	}
 
 	boolean startRecording(double silenceThreshold, RecordingCompletedCallback recordingCompletedCallback) {

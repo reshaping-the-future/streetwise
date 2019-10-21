@@ -7,6 +7,10 @@ import com.pi4j.wiringpi.SoftPwm;
 import io.reactivex.disposables.Disposable;
 import okhttp3.*;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.Mixer;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -33,6 +37,8 @@ public class Pss2 {
 	private static final String LANGUAGE = "hi"; // audio language - overridden from /boot/pss2language on start
 	private static final int OUTPUT_VOLUME = 100; // default (percentage)  - overridden from /boot/pss2volume on start
 	private static final int FALLBACK_SYSTEM_ID = 20; // if /boot/pss2id reading fails, use this ID
+	private static final String FALLBACK_MIC_NAME = "sndrpigooglevoi [default]"; // if /boot/pss2mic reading fails, use this
+	private static final String FALLBACK_SPEAKER_NAME = "sndrpigooglevoi [default]"; // if /boot/pss2speaker reading fails, use this
 
 	// lower to require a more silent background (e.g., -70); higher to tolerate more noise (e.g., -50)
 	private static final double SILENCE_THRESHOLD_DB = -45; // decibel level for silence detection - /boot/pss2silence
@@ -69,6 +75,8 @@ public class Pss2 {
 	private Disposable answerQueryNumSub;
 
 	private int mPss2Id;
+	private static String mMicName;
+	private static String mSpeakerName;
 	private int mPss2Volume;
 	private double mPss2SilenceThreshold;
 	private String mPss2Language;
@@ -106,6 +114,26 @@ public class Pss2 {
 		}
 
 		try {
+			List<String> lines = Files.readAllLines(Paths.get("/boot", "pss2mic"));
+			mMicName = lines.get(0);
+			Pss2.logEvent("Microphone name loaded: " + mMicName);
+		} catch (IOException | IndexOutOfBoundsException ignored) { }
+		if(mMicName == null || mMicName.length() == 0) {
+			Pss2.logEvent("Error reading Microphone name setting to " + FALLBACK_MIC_NAME + " as fallback");
+			mMicName = FALLBACK_MIC_NAME;
+		}
+
+		try {
+			List<String> lines = Files.readAllLines(Paths.get("/boot", "pss2speaker"));
+			mSpeakerName = lines.get(0);
+			Pss2.logEvent("Speaker name loaded: " + mSpeakerName);
+		} catch (IOException | IndexOutOfBoundsException ignored) { }
+		if(mSpeakerName == null || mSpeakerName.length() == 0) {
+			Pss2.logEvent("Error reading Speaker name setting to " + FALLBACK_SPEAKER_NAME + " as fallback");
+			mSpeakerName = FALLBACK_SPEAKER_NAME;
+		}
+
+		try {
 			List<String> lines = Files.readAllLines(Paths.get("/boot", "pss2volume"));
 			mPss2Volume = Integer.valueOf(lines.get(0));
 			Pss2.logEvent("Pss2 volume loaded: " + mPss2Volume);
@@ -136,18 +164,18 @@ public class Pss2 {
 			mPss2Language = LANGUAGE;
 		}
 
-		setupGpio();
-		setupSounds();
-
 		pssIO = new PssIO();
 		pssIO.initialize();
 		pssIO.blockUserInput();
+
+		setupGpio();
+		setupSounds();
+
 
 		mProgressUpdater = new IndeterminateProgressUpdater();
 		mProgressUpdaterThread = new Thread(mProgressUpdater);
 		mProgressUpdaterThread.start(); // on start, just show the loading symbol
 
-		mAudioRecorder = new SilenceDetectingAudioRecorder(HOME_DIRECTORY, pssIO);
 		mNumberPlaybackCallback = new NumberPlaybackCallback();
 		answerQueryNumSub = pssIO.getAnswerQueryNumbers().subscribe(this::getAndPlayAnswer);
 
@@ -303,13 +331,59 @@ public class Pss2 {
 		}
 	}
 
+	Mixer micMixer = null;
+	Mixer speakerMixer = null;
 	private void setupSounds() {
+		Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
+		for (Mixer.Info info: mixerInfos){
+			Mixer m = AudioSystem.getMixer(info);
+			Line.Info[] lineInfos = m.getTargetLineInfo();
+			if(lineInfos.length>=1){
+				System.out.println("Line Name: " + info.getName());//The name of the AudioDevice
+				if(info.getName().equals(mSpeakerName)) {
+					speakerMixer = m;
+					Pss2.logEvent("Using Speaker: " + info.getName());
+				}
+				if(info.getName().equals(mMicName)) {
+					micMixer = m;
+					Pss2.logEvent("Using Mic: " + info.getName());
+				}
+				System.out.println("Line Description: " + info.getDescription());//The type of audio device
+				for (Line.Info lineInfo:lineInfos){
+					System.out.println ("\t"+"---"+lineInfo);
+					Line line;
+					try {
+						line = m.getLine(lineInfo);
+					} catch (LineUnavailableException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return;
+					}
+					System.out.println("\t-----"+line);
+				}
+			}
+		}
+		if(micMixer == null) {
+			micMixer = AudioSystem.getMixer(mixerInfos[1]);
+			Pss2.logEvent("Using fallback mixer for microphone");
+		}
+		if(speakerMixer == null) {
+			speakerMixer = AudioSystem.getMixer(mixerInfos[1]);
+			Pss2.logEvent("Using fallback mixer for speaker");
+		}
+		mAudioRecorder = new SilenceDetectingAudioRecorder(HOME_DIRECTORY, pssIO, micMixer);
 		try {
 			Runtime.getRuntime().exec("amixer sset Master,0 " + mPss2Volume + "%"); // set system volume
 		} catch (IOException e) {
 			Pss2.logEvent("Warning: unable to set sound to maximum volume");
 		}
-		mSoundPlayer = new SoundPlayer(mPss2Language);
+		try {
+			Pss2.logEvent("Setting mic to max volume");
+			Runtime.getRuntime().exec("amixer -c 1 set Mic 100%"); // set usb mic volume to max
+		} catch (IOException e) {
+			Pss2.logEvent("Warning: unable to set mic to maximum volume");
+		}
+		mSoundPlayer = new SoundPlayer(mPss2Language, speakerMixer);
 	}
 
 	public static void main(String[] args) {
